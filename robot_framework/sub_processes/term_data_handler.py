@@ -157,7 +157,7 @@ def _insert_term_data_to_sql(data, sql_conn_string, term_set_uuid, sql_stored_pr
                 "parent_uuid": ("str", f"{parent_uuid}"),
                 "term_set_uuid": ("str", f"{term_set_uuid}")
             }
-        execute_stored_procedure(sql_conn_string,f"rpa.{sql_stored_procedure}", sql_data_params)
+        execute_stored_procedure(sql_conn_string, f"rpa.{sql_stored_procedure}", sql_data_params)
 
         for child in data.get("Children", []):
             _insert_term_data_to_sql(child, sql_conn_string, term_set_uuid, sql_stored_procedure)
@@ -168,7 +168,7 @@ def pull_term_data_from_go_to_sql(credentials, base_url, case_type, start_term_i
     Fetch term data from an API and insert the data into a SQL database.
 
     Args:
-        credentials (dict): Dictionary containing authentication credentials (e.g., API username and password) 
+        credentials (dict): Dictionary containing authentication credentials (e.g., API username and password)
                             and SQL connection string.
         base_url (str): Base URL for the API.
         case_type (str): Case type to determine the appropriate API endpoint.
