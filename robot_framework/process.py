@@ -5,6 +5,7 @@ from typing import Dict, Any
 from OpenOrchestrator.orchestrator_connection.connection import OrchestratorConnection
 
 from robot_framework.sub_processes.term_data_handler import pull_term_data_from_go_to_sql
+from robot_framework.sub_processes.taxonomy import get_taxononmy
 
 
 def process(orchestrator_connection: OrchestratorConnection) -> None:
@@ -13,9 +14,15 @@ def process(orchestrator_connection: OrchestratorConnection) -> None:
     credentials = get_credentials_and_constants(orchestrator_connection)
     oc_args_json = json.loads(orchestrator_connection.process_arguments)
 
-    orchestrator_connection.log_trace("Pull term data from GO.")
-    pull_term_data_from_go_to_sql(credentials, oc_args_json['baseUrl'], oc_args_json['caseType'], oc_args_json['startTermId'], oc_args_json['storedProcedure'], oc_args_json['termSetUuid'])
-    orchestrator_connection.log_trace("Term data was successfully pulled from GO.")
+    if oc_args_json['process'] == 'taxonomy':
+        orchestrator_connection.log_trace("Pull taxononmy data from GO.")
+        get_taxononmy(credentials, oc_args_json['caseType'], oc_args_json['viewId'],oc_args_json['baseUrl'])
+        orchestrator_connection.log_trace("Taxonomy data was successfully pulled from GO.")
+
+    if oc_args_json['process'] == 'term':
+        orchestrator_connection.log_trace("Pull term data from GO.")
+        pull_term_data_from_go_to_sql(credentials, oc_args_json['baseUrl'], oc_args_json['caseType'], oc_args_json['startTermId'], oc_args_json['storedProcedure'], oc_args_json['termSetUuid'])
+        orchestrator_connection.log_trace("Term data was successfully pulled from GO.")
 
 
 def get_credentials_and_constants(orchestrator_connection: OrchestratorConnection) -> Dict[str, Any]:
