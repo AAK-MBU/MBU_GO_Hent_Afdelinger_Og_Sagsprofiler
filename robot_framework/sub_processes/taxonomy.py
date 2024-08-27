@@ -2,6 +2,7 @@
 This module provides functionality for fetching data from a SharePoint Taxonomy Hidden List
 and inserting the retrieved data into a database using a stored procedure.
 """
+import json
 import requests
 from requests_ntlm import HttpNtlmAuth
 
@@ -24,7 +25,7 @@ def fetch_data(session, url):
     """
     response = session.post(url)
     if not response.ok:
-        raise Exception(f"Error fetching data: {response.text}")
+        raise requests.exceptions.RequestException(f"Error fetching data: {response.text}")
     return response.json()
 
 
@@ -89,5 +90,11 @@ def get_taxononmy(credentials, case_type, view_id, base_url):
                 next_url = None
         insert_into_database(credentials['sql_conn_string'], "rpa.GO_TaxonomyList_Insert", all_rows)
         print("All rows have been inserted into the database.")
-    except RuntimeError as re:
-        print(f"An error occurred: {str(re)}")
+    except requests.exceptions.RequestException as re:
+        print(f"Request error occurred: {str(re)}")
+    except KeyError as ke:
+        print(f"Missing key in credentials: {str(ke)}")
+    except TypeError as te:
+        print(f"Type error: {str(te)}")
+    except json.JSONDecodeError as je:
+        print(f"JSON decode error: {str(je)}")
