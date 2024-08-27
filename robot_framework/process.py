@@ -16,7 +16,7 @@ def process(orchestrator_connection: OrchestratorConnection) -> None:
 
     if oc_args_json['process'] == 'taxonomy':
         orchestrator_connection.log_trace("Pull taxononmy data from GO.")
-        get_taxononmy(credentials, oc_args_json['caseType'], oc_args_json['viewId'],oc_args_json['baseUrl'])
+        get_taxononmy(credentials, oc_args_json['caseType'], oc_args_json['viewId'], oc_args_json['baseUrl'])
         orchestrator_connection.log_trace("Taxonomy data was successfully pulled from GO.")
 
     if oc_args_json['process'] == 'term':
