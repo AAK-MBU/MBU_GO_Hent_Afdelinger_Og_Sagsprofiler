@@ -3,7 +3,6 @@ This module provides functionality for fetching data from a SharePoint Taxonomy 
 and inserting the retrieved data into a database using a stored procedure.
 """
 import json
-from typing import Optional
 import requests
 from requests_ntlm import HttpNtlmAuth
 
