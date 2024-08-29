@@ -50,7 +50,7 @@ def insert_into_database(connection_string, stored_procedure, data, case_type):
             "IdForTerm": ("str", item.get("IdForTerm", "")),
             "IdForTermSet": ("str", item.get("IdForTermSet", "")),
             "Path": ("str", item.get("Path", "")),
-            "CaseType": ("str", {case_type})
+            "CaseType": ("str", case_type)
         }
         print(params)
         result = execute_stored_procedure(connection_string, stored_procedure, params)
