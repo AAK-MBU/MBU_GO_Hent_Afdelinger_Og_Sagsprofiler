@@ -1,4 +1,5 @@
 """This module contains the main process of the robot."""
+import os
 import json
 from typing import Dict, Any
 

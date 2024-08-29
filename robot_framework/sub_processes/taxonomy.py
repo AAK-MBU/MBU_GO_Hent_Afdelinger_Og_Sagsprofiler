@@ -3,6 +3,7 @@ This module provides functionality for fetching data from a SharePoint Taxonomy 
 and inserting the retrieved data into a database using a stored procedure.
 """
 import json
+from typing import Optional
 import requests
 from requests_ntlm import HttpNtlmAuth
 
@@ -29,7 +30,7 @@ def fetch_data(session, url):
     return response.json()
 
 
-def insert_into_database(connection_string, stored_procedure, data):
+def insert_into_database(connection_string, stored_procedure, data, case_type):
     """
     Inserts a list of records into the database by executing a stored procedure for each record.
 
@@ -37,6 +38,7 @@ def insert_into_database(connection_string, stored_procedure, data):
         connection_string (str): The connection string for the database.
         stored_procedure (str): The name of the stored procedure to execute.
         data (list of dict): The list of data records to insert into the database.
+        case_type (str): Case type.
 
     Prints:
         str: A message indicating the failure of an insertion along with the error message.
@@ -48,8 +50,10 @@ def insert_into_database(connection_string, stored_procedure, data):
             "IdForTermStore": ("str", item.get("IdForTermStore", "")),
             "IdForTerm": ("str", item.get("IdForTerm", "")),
             "IdForTermSet": ("str", item.get("IdForTermSet", "")),
-            "Path": ("str", item.get("Path", ""))
+            "Path": ("str", item.get("Path", "")),
+            "CaseType": ("str", {case_type})
         }
+        print(params)
         result = execute_stored_procedure(connection_string, stored_procedure, params)
         if not result["success"]:
             print(f"Failed to insert record: {result['error_message']}")
@@ -88,7 +92,7 @@ def get_taxononmy(credentials, case_type, view_id, base_url):
                 next_url = base_url + endpoint + json_data["NextHref"]
             else:
                 next_url = None
-        insert_into_database(credentials['sql_conn_string'], "rpa.GO_TaxonomyList_Insert", all_rows)
+        insert_into_database(credentials['sql_conn_string'], "rpa.GO_TaxonomyList_Insert", all_rows, case_type)
         print("All rows have been inserted into the database.")
     except requests.exceptions.RequestException as re:
         print(f"Request error occurred: {str(re)}")
